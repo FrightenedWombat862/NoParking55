@@ -16,6 +16,12 @@ The Plan:
 
 int main() {
 
+    const string SORT_UNSORTED = "unsorted";
+    const string SORT_DATE = "date/time";
+    const string SORT_PLATES = "license plates";
+
+    string sortStatus = SORT_UNSORTED;
+
     Database database;
     database.readFromCsv("parking_citations.csv");
 
@@ -30,7 +36,7 @@ int main() {
     cout << "Type \"help\" for help" << endl;
     while (true) {
         string inputLine;
-        cout << endl << " >";  // Terminal prompt
+        cout << endl << "Sorted by: " << sortStatus << " >";  // Terminal prompt
         getline(cin, inputLine);
 
         // If there is one argument, lastArgument is the one that will be populated
@@ -93,14 +99,20 @@ int main() {
                 cout << "Command \"sort\" requires one argument <algorithm>, which can be either m for merge or b for bucket." << endl;
             }
             else if (firstArgument.at(0) == 'm') {
-                cout << "Now merge sorting data..." << endl;
+                cout << "Now merge sorting license plates..." << endl;
                 MergeSort::mergeWrapper(database.data);
                 cout << "Information about the first citation:" << endl;
                 cout << database.data.at(0)->plateNumber << endl;
                 cout << std::string(*(database.data.at(0)->dateTime)) << endl;
+                sortStatus = SORT_PLATES;
             }
             else if (firstArgument.at(0) == 'b') {
-                cout << "Bucket sort not implemented yet..." << endl;
+                cout << "Now bucket sorting license plates..." << endl;
+                BucketSort::bucketSortWrapper(database.data);
+                cout << "Information about the first citation:" << endl;
+                cout << database.data.at(0)->plateNumber << endl;
+                cout << std::string(*(database.data.at(0)->dateTime)) << endl;
+                sortStatus = SORT_PLATES;
             }
             else {
                 cout << "Please type m for merge sort or b for bucket sort." << endl;
@@ -109,11 +121,12 @@ int main() {
         else {
             // Help
             cout << "Commands list:" << endl;
-            cout << "find <query> - Searches for a license plate" << endl;
-            cout << "get <index> - Gets the license plate at a specific index" << endl;
+            cout << "find <query> - Searches for a parking citation number." << endl;
+            cout << "get <index> - Gets the parking citation at a specific index" << endl;
             cout << "help - Displays this help message" << endl;
-            cout << "sort <algorithm> - Sorts license plates by an algorithm. Algorithm is m for merge sort or b for bucket sort" << endl;
             cout << "quit - Exits the program" << endl;
+            cout << "sort <algorithm> <field> - Sorts citations. Algorithm is m for merge sort or\n" <<
+                "b for bucket sort. Field can be p for license plates or d for dates." << endl;
         }
     }
 }
