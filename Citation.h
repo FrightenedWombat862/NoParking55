@@ -23,6 +23,8 @@ public:
     Citation(const Citation &other);
     Citation& operator=(const Citation& other);
     ~Citation();
+
+    explicit operator std::string() const;  // Allow conversion into a string
 };
 
 

@@ -5,6 +5,8 @@ Database::Database() {
 }
 
 void Database::readFromCsv(const std::string &filename) {
+    this->sortStatus = SORT_UNSORTED;  // Default to unsorted
+
     if (!std::filesystem::exists(filename)) {
         throw std::ios_base::failure("In Database::readFromCsv(), file \"" + filename + "\" not found.");
     }
@@ -63,5 +65,69 @@ void Database::readFromCsv(const std::string &filename) {
                                                          inputLineVector.at(2), inputLineVector.at(3),
                                                          inputLineVector.at(4), inputLineVector.at(5),
                                                          inputLineVector.at(6), fine, dateTime));
+    }
+}
+
+std::string Database::getSortStatusString() {
+    if (sortStatus == SORT_UNSORTED) {
+        return "unsorted";
+    }
+    else if (sortStatus == SORT_PLATES) {
+        return "license plate";
+    }
+    else if (sortStatus == SORT_DATE) {
+        return "date";
+    }
+    throw std::logic_error("Unexpected value " + std::to_string(sortStatus) + " for sortStatus when running " +
+        "Database::getSortStatusString()");
+}
+
+int Database::binarySearch(const std::string &searchQuery) {
+    if (sortStatus == SORT_UNSORTED) {
+        return -2;
+    }
+
+    // left is index of first element, right is index of the last element (NOT after)
+    int left = 0;
+    int currentElement = (int) this->data.size() / 2;  // The element we are currently searching.
+    int right = (int) this->data.size() - 1;
+
+    while (left < right) {
+        if (sortStatus == SORT_PLATES) {
+            if (searchQuery < this->data.at(currentElement)->plateNumber) {
+                right = currentElement - 1;
+                currentElement = (left + right) / 2;
+            }
+            else if (searchQuery > this->data.at(currentElement)->plateNumber) {
+                left = currentElement + 1;
+                currentElement = (left + right) / 2;
+            }
+            else {
+                return currentElement;
+            }
+        }
+        if (sortStatus == SORT_DATE) {
+            if (searchQuery < this->data.at(currentElement)->dateTime->getDateTimeString()) {
+                right = currentElement - 1;
+                currentElement = (left + right) / 2;
+            }
+            else if (searchQuery > this->data.at(currentElement)->dateTime->getDateTimeString()) {
+                left = currentElement + 1;
+                currentElement = (left + right) / 2;
+            }
+            else {
+                return currentElement;
+            }
+        }
+    }
+
+    if (sortStatus == SORT_PLATES && this->data.at(currentElement)->plateNumber == searchQuery) {
+        return currentElement;
+    }
+    else if (sortStatus == SORT_DATE && this->data.at(currentElement)->dateTime->getDateTimeString() == searchQuery) {
+        return currentElement;
+    }
+    else {
+        return -1;
     }
 }

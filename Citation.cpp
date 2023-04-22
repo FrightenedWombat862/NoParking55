@@ -47,3 +47,9 @@ Citation::~Citation() {
     // Clean up the memory
     delete this->dateTime;
 }
+
+Citation::operator std::string() const {
+    return this->state + " " + this->plateNumber + " | " + this->carColor + " " + this->carMake + " " + this->carStyle +
+    " | Violation: " + this->violation + "\nDate: " + (std::string) *this->dateTime +
+    " | Fined $" + std::to_string(this->fine);
+}

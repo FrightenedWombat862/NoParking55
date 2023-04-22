@@ -1,8 +1,6 @@
-#include <fstream>
+#include <chrono>
 #include <iostream>
-#include <memory>
 #include <string>
-#include <vector>
 #include "Database.h"
 #include "MergeSort.h"
 #include "BucketSort.h"
@@ -15,15 +13,10 @@ The Plan:
  */
 
 int main() {
-
-    const string SORT_UNSORTED = "unsorted";
-    const string SORT_DATE = "date/time";
-    const string SORT_PLATES = "license plates";
-
-    string sortStatus = SORT_UNSORTED;
+    const string fileLocation = "parking_citations.csv";
 
     Database database;
-    database.readFromCsv("parking_citations.csv");
+    database.readFromCsv(fileLocation);
 
     // NOTE: The parsed data is in vector form at database.data.
     // Access it by doing *(database.data.at(index))
@@ -36,7 +29,7 @@ int main() {
     cout << "Type \"help\" for help" << endl;
     while (true) {
         string inputLine;
-        cout << endl << "Sorted by: " << sortStatus << " >";  // Terminal prompt
+        cout << endl << "Sorted by: " << database.getSortStatusString() << " >";  // Terminal prompt
         getline(cin, inputLine);
 
         // If there is one argument, lastArgument is the one that will be populated
@@ -63,11 +56,57 @@ int main() {
             secondArgument = inputLine.substr(inputLine.find_last_of(' '));
             secondArgument.erase(secondArgument.find(' '), 1);
         }
-        if (command.at(0) == 'f') {
-            // TODO Implement binary search
-            cout << "Find command not implemented yet..." << endl;
+        if (command.empty()) {
+            cout << "Please enter a command. Type \"help\" for help" << endl;
         }
-        if (command.at(0) == 'g') {
+        else if (command.at(0) == 'f') {
+            // find
+            if (firstArgument.empty()) {
+                cout << "Command \"find\" requires one argument <query>." << endl;
+            }
+            else {
+                auto startTime = chrono::system_clock::now();  // Get start time
+                int index = database.binarySearch(firstArgument);
+                auto endTime = chrono::system_clock::now();  // Get end time
+                std::chrono::duration<double> elapsedTime = endTime - startTime;
+                if (index == -2) {
+                    cout << "Cannot run command \"find\" before sorting input" << endl;
+                }
+                else if (index == -1) {
+                    cout << "No results for query \"" << firstArgument << "\"" << endl;
+                }
+                else {
+                    cout << "Found results at index " << std::to_string(index) << endl;
+                    // Print ALL elements that match the query.
+                    if (database.sortStatus == Database::SORT_PLATES) {
+                        int currentlyPrinting = index;
+                        while (currentlyPrinting >= 0 && database.data.at(currentlyPrinting)->plateNumber == firstArgument) {
+                            cout << (std::string) *database.data.at(currentlyPrinting) << endl;
+                            currentlyPrinting--;
+                        }
+                        currentlyPrinting = index + 1;
+                        while (currentlyPrinting < database.data.size() && database.data.at(currentlyPrinting)->plateNumber == firstArgument) {
+                            cout << (std::string) *database.data.at(currentlyPrinting) << endl;
+                            currentlyPrinting++;
+                        }
+                    }
+                    else if (database.sortStatus == Database::SORT_DATE) {
+                        int currentlyPrinting = index;
+                        while (currentlyPrinting >= 0 && database.data.at(currentlyPrinting)->dateTime->getDateTimeString() == firstArgument) {
+                            cout << (std::string) *database.data.at(currentlyPrinting) << endl;
+                            currentlyPrinting--;
+                        }
+                        currentlyPrinting = index + 1;
+                        while (currentlyPrinting < database.data.size() && database.data.at(currentlyPrinting)->dateTime->getDateTimeString() == firstArgument) {
+                            cout << (std::string) *database.data.at(currentlyPrinting) << endl;
+                            currentlyPrinting++;
+                        }
+                    }
+                }
+                cout << "The binary search took " << elapsedTime.count() << " seconds" << endl;
+            }
+        }
+        else if (command.at(0) == 'g') {
             // get
             int indexToGet = 0;  // The index to get
             try {
@@ -82,16 +121,18 @@ int main() {
                 cout << "get command requires an integer as the first argument, not \"" << firstArgument << '\"' << endl;
                 continue;
             }
-            cout << "License plate number: " << endl;
-            cout << database.data.at(indexToGet)->plateNumber << endl;
-            cout << std::string(*(database.data.at(indexToGet)->dateTime)) << endl;
-            cout << database.data.at(indexToGet)->state << " | " << database.data.at(indexToGet)->carColor <<
-                " " << database.data.at(indexToGet)->carMake << " " << database.data.at(indexToGet)->carStyle <<
-                " | Fined $" << database.data.at(indexToGet)->fine << endl;
+            cout << (string) *database.data.at(indexToGet) << endl;
         }
         else if (command.at(0) == 'q') {
             // quit
             break;
+        }
+        else if (command.at(0) == 'r') {
+            // reload
+            database.data.clear();  // Empty the database.
+            database.readFromCsv(fileLocation);  // Reread data from CSV
+            database.sortStatus = Database::SORT_UNSORTED;  // Mark as unsorted
+            cout << "Successfully reloaded data from disk" << endl;
         }
         else if (command.at(0) == 's') {
             // sort
@@ -100,19 +141,21 @@ int main() {
             }
             else if (firstArgument.at(0) == 'm') {
                 cout << "Now merge sorting license plates..." << endl;
+                auto startTime = chrono::system_clock::now();  // Get start time
                 MergeSort::mergeWrapper(database.data);
-                cout << "Information about the first citation:" << endl;
-                cout << database.data.at(0)->plateNumber << endl;
-                cout << std::string(*(database.data.at(0)->dateTime)) << endl;
-                sortStatus = SORT_PLATES;
+                auto endTime = chrono::system_clock::now();  // Get end time
+                std::chrono::duration<double> elapsedTime = endTime - startTime;
+                cout << "Took " << elapsedTime.count() << " seconds to sort." <<  endl;
+                database.sortStatus = Database::SORT_PLATES;
             }
             else if (firstArgument.at(0) == 'b') {
                 cout << "Now bucket sorting license plates..." << endl;
+                auto startTime = chrono::system_clock::now();  // Get start time
                 BucketSort::bucketSortWrapper(database.data);
-                cout << "Information about the first citation:" << endl;
-                cout << database.data.at(0)->plateNumber << endl;
-                cout << std::string(*(database.data.at(0)->dateTime)) << endl;
-                sortStatus = SORT_PLATES;
+                auto endTime = chrono::system_clock::now();  // Get end time
+                std::chrono::duration<double> elapsedTime = endTime - startTime;
+                cout << "Took " << elapsedTime.count() << " seconds to sort." <<  endl;
+                database.sortStatus = Database::SORT_PLATES;
             }
             else {
                 cout << "Please type m for merge sort or b for bucket sort." << endl;
@@ -124,6 +167,7 @@ int main() {
             cout << "find <query> - Searches for a parking citation number." << endl;
             cout << "get <index> - Gets the parking citation at a specific index" << endl;
             cout << "help - Displays this help message" << endl;
+            cout << "reload - Reloads the database from file" << endl;
             cout << "quit - Exits the program" << endl;
             cout << "sort <algorithm> <field> - Sorts citations. Algorithm is m for merge sort or\n" <<
                 "b for bucket sort. Field can be p for license plates or d for dates." << endl;
