@@ -82,6 +82,15 @@ std::string Database::getSortStatusString() {
         "Database::getSortStatusString()");
 }
 
+int Database::linearSearchLicensePlate(const std::string &searchQuery) {
+    for (int i = 0; i < this->data.size(); i++) {
+        if (this->data.at(i)->plateNumber == searchQuery) {
+            return i;
+        }
+    }
+    return -1;
+}
+
 int Database::binarySearch(const std::string &searchQuery) {
     if (sortStatus == SORT_UNSORTED) {
         return -2;

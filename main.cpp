@@ -4,6 +4,7 @@
 #include "Database.h"
 #include "MergeSort.h"
 #include "BucketSort.h"
+#include "PatienceSort.h"
 using namespace std;
 
 /*
@@ -103,7 +104,9 @@ int main() {
                         }
                     }
                 }
-                cout << "The binary search took " << elapsedTime.count() << " seconds" << endl;
+                if (index != -2) {
+                    cout << "The binary search took " << elapsedTime.count() << " seconds." << endl;
+                }
             }
         }
         else if (command.at(0) == 'g') {
@@ -123,6 +126,25 @@ int main() {
             }
             cout << (string) *database.data.at(indexToGet) << endl;
         }
+        else if (command.at(0) == 'l') {
+            // linear search
+            if (firstArgument.empty()) {
+                cout << "Command \"lfind\" requires one argument <query>." << endl;
+            }
+            else {
+                auto startTime = chrono::system_clock::now();  // Get start time
+                int index = database.linearSearchLicensePlate(firstArgument);
+                auto endTime = chrono::system_clock::now();  // Get end time
+                std::chrono::duration<double> elapsedTime = endTime - startTime;
+                if (index != -1) {
+                    cout << (std::string) *database.data.at(index) << endl;
+                }
+                else {
+                    cout << "License plate \"" << firstArgument << "\" not found" << endl;
+                }
+                cout << "The linear search took " << elapsedTime.count() << " seconds." << endl;
+            }
+        }
         else if (command.at(0) == 'q') {
             // quit
             break;
@@ -137,7 +159,7 @@ int main() {
         else if (command.at(0) == 's') {
             // sort
             if (firstArgument.empty()) {
-                cout << "Command \"sort\" requires one argument <algorithm>, which can be either m for merge or b for bucket." << endl;
+                cout << "Command \"sort\" requires one argument <algorithm>, which can be m for merge, b for bucket, or p for patience." << endl;
             }
             else if (firstArgument.at(0) == 'm') {
                 cout << "Now merge sorting license plates..." << endl;
@@ -157,20 +179,30 @@ int main() {
                 cout << "Took " << elapsedTime.count() << " seconds to sort." <<  endl;
                 database.sortStatus = Database::SORT_PLATES;
             }
+            else if (firstArgument.at(0) == 'p') {
+                cout << "Now patience sorting license plates..." << endl;
+                auto startTime = chrono::system_clock::now();  // Get start time
+                PatienceSort::patienceSort(database.data);
+                auto endTime = chrono::system_clock::now();  // Get end time
+                std::chrono::duration<double> elapsedTime = endTime - startTime;
+                cout << "Took " << elapsedTime.count() << " seconds to sort." <<  endl;
+                database.sortStatus = Database::SORT_PLATES;
+            }
             else {
                 cout << "Please type m for merge sort or b for bucket sort." << endl;
             }
         }
         else {
-            // Help
+            // help
             cout << "Commands list:" << endl;
-            cout << "find <query> - Searches for a parking citation number." << endl;
+            cout << "find <query> - Performs binary search for a parking citation" << endl;
             cout << "get <index> - Gets the parking citation at a specific index" << endl;
             cout << "help - Displays this help message" << endl;
+            cout << "lfind <query> - Performs linear search for a license plate number" << endl;
             cout << "reload - Reloads the database from file" << endl;
             cout << "quit - Exits the program" << endl;
-            cout << "sort <algorithm> <field> - Sorts citations. Algorithm is m for merge sort or\n" <<
-                "b for bucket sort. Field can be p for license plates or d for dates." << endl;
+            cout << "sort <algorithm> <field> - Sorts citations. Algorithm is m for merge sort, \n" <<
+                "b for bucket sort, or p for patience sort. Field can be l for license plates or d for dates." << endl;
         }
     }
 }

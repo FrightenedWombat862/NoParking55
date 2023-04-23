@@ -37,6 +37,13 @@ public:
     std::string getSortStatusString();
 
     /**
+     * Performs linear search for a license plate number.
+     * @param searchQuery The license plate to search for.
+     * @return -1 if not found, index if found.
+     */
+    int linearSearchLicensePlate(const std::string& searchQuery);
+
+    /**
      * Performs binary search on the database, if possible
      * @param searchQuery The string to search for.
      * @return -2 if unsorted, -1 if not found, index if found.
