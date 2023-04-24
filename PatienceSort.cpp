@@ -108,14 +108,6 @@ void PatienceSort::patienceSort(std::vector<std::unique_ptr<Citation>>& citation
 
     // Now all the cards have been dealt into the stacks, each in a sorted order.
 
-    // We shouldn't need to create a heap as the sorted array
-    /*
-    // Create min heap in O(n).
-    for (std::size_t indexToHeapify = cardStacks.size() - 1; indexToHeapify != (std::size_t) -1; indexToHeapify--) {
-        heapifyDown(cardStacks, indexToHeapify);
-    }
-     */
-
     std::size_t originalIndex = 0;  // The index in the original vector we are inserting into
     while (!cardStacks.empty()) {
         // We know for sure that the first element is the smallest because of the heap invariant.

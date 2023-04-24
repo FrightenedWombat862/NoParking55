@@ -7,12 +7,6 @@
 #include "PatienceSort.h"
 using namespace std;
 
-/*
-The Plan:
- - Merge sort the license plate numbers
- - Radix sort or bucket sort the date/time.
- */
-
 int main() {
     const string fileLocation = "parking_citations.csv";
 
@@ -92,13 +86,20 @@ int main() {
                         }
                     }
                     else if (database.sortStatus == Database::SORT_DATE) {
+                        // Print dates in order by finding the first matching date and iterating until the last date.
                         int currentlyPrinting = index;
-                        while (currentlyPrinting >= 0 && database.data.at(currentlyPrinting)->dateTime->getDateTimeString() == firstArgument) {
-                            cout << (std::string) *database.data.at(currentlyPrinting) << endl;
-                            currentlyPrinting--;
+                        while (true) {
+                            if (currentlyPrinting == 0) {
+                                break;
+                            }
+                            else if (database.data.at(currentlyPrinting - 1)->dateTime->getDateString() == firstArgument) {
+                                currentlyPrinting--;
+                            }
+                            else {
+                                break;
+                            }
                         }
-                        currentlyPrinting = index + 1;
-                        while (currentlyPrinting < database.data.size() && database.data.at(currentlyPrinting)->dateTime->getDateTimeString() == firstArgument) {
+                        while (currentlyPrinting < database.data.size() && database.data.at(currentlyPrinting)->dateTime->getDateString() == firstArgument) {
                             cout << (std::string) *database.data.at(currentlyPrinting) << endl;
                             currentlyPrinting++;
                         }
@@ -132,6 +133,7 @@ int main() {
                 cout << "Command \"lfind\" requires one argument <query>." << endl;
             }
             else {
+                cout << "Linear searching for license plate \"" << firstArgument << "\"..." << endl;
                 auto startTime = chrono::system_clock::now();  // Get start time
                 int index = database.linearSearchLicensePlate(firstArgument);
                 auto endTime = chrono::system_clock::now();  // Get end time
@@ -162,25 +164,47 @@ int main() {
                 cout << "Command \"sort\" requires one argument <algorithm>, which can be m for merge, b for bucket, or p for patience." << endl;
             }
             else if (firstArgument.at(0) == 'm') {
-                cout << "Now merge sorting license plates..." << endl;
-                auto startTime = chrono::system_clock::now();  // Get start time
-                MergeSort::mergeWrapper(database.data);
-                auto endTime = chrono::system_clock::now();  // Get end time
-                std::chrono::duration<double> elapsedTime = endTime - startTime;
-                cout << "Took " << elapsedTime.count() << " seconds to sort." <<  endl;
-                database.sortStatus = Database::SORT_PLATES;
+                if (!secondArgument.empty() && secondArgument.at(0) == 'd') {
+                    cout << "Now merge sorting by date..." << endl;
+                    auto startTime = chrono::system_clock::now();  // Get start time
+                    MergeSort::mergeSortDates(database.data);
+                    auto endTime = chrono::system_clock::now();  // Get end time
+                    std::chrono::duration<double> elapsedTime = endTime - startTime;
+                    cout << "Took " << elapsedTime.count() << " seconds to sort." <<  endl;
+                    database.sortStatus = Database::SORT_DATE;
+                }
+                else {
+                    cout << "Now merge sorting by license plate..." << endl;
+                    auto startTime = chrono::system_clock::now();  // Get start time
+                    MergeSort::mergeWrapper(database.data);
+                    auto endTime = chrono::system_clock::now();  // Get end time
+                    std::chrono::duration<double> elapsedTime = endTime - startTime;
+                    cout << "Took " << elapsedTime.count() << " seconds to sort." <<  endl;
+                    database.sortStatus = Database::SORT_PLATES;
+                }
             }
             else if (firstArgument.at(0) == 'b') {
-                cout << "Now bucket sorting license plates..." << endl;
-                auto startTime = chrono::system_clock::now();  // Get start time
-                BucketSort::bucketSortWrapper(database.data);
-                auto endTime = chrono::system_clock::now();  // Get end time
-                std::chrono::duration<double> elapsedTime = endTime - startTime;
-                cout << "Took " << elapsedTime.count() << " seconds to sort." <<  endl;
-                database.sortStatus = Database::SORT_PLATES;
+                if (!secondArgument.empty() && secondArgument.at(0) == 'd') {
+                    cout << "Now bucket sorting by date..." << endl;
+                    auto startTime = chrono::system_clock::now();  // Get start time
+                    BucketSort::bucketSortDateWrapper(database.data);
+                    auto endTime = chrono::system_clock::now();  // Get end time
+                    std::chrono::duration<double> elapsedTime = endTime - startTime;
+                    cout << "Took " << elapsedTime.count() << " seconds to sort." <<  endl;
+                    database.sortStatus = Database::SORT_DATE;
+                }
+                else {
+                    cout << "Now bucket sorting by license plate..." << endl;
+                    auto startTime = chrono::system_clock::now();  // Get start time
+                    BucketSort::bucketSortWrapper(database.data);
+                    auto endTime = chrono::system_clock::now();  // Get end time
+                    std::chrono::duration<double> elapsedTime = endTime - startTime;
+                    cout << "Took " << elapsedTime.count() << " seconds to sort." <<  endl;
+                    database.sortStatus = Database::SORT_PLATES;
+                }
             }
             else if (firstArgument.at(0) == 'p') {
-                cout << "Now patience sorting license plates..." << endl;
+                cout << "Now patience sorting by license plate..." << endl;
                 auto startTime = chrono::system_clock::now();  // Get start time
                 PatienceSort::patienceSort(database.data);
                 auto endTime = chrono::system_clock::now();  // Get end time

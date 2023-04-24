@@ -10,9 +10,19 @@
 
 class BucketSort {
 private:
-public:
     static void bucketSort(std::vector<std::unique_ptr<Citation>> &citations, unsigned int recursionDepth);
+    static void bucketSortDate(std::vector<std::unique_ptr<Citation>> &citations, unsigned int recursionDepth);
+public:
+    /**
+     * Bucket sort vector of Citations by plate number
+     * @param citations
+     */
     static void bucketSortWrapper(std::vector<std::unique_ptr<Citation>>& citations);
+    /**
+     * Bucket sort vector of Citations by date
+     * @param citations
+     */
+    static void bucketSortDateWrapper(std::vector<std::unique_ptr<Citation>>& citations);
 };
 
 

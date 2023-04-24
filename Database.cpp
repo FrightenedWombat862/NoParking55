@@ -116,11 +116,11 @@ int Database::binarySearch(const std::string &searchQuery) {
             }
         }
         if (sortStatus == SORT_DATE) {
-            if (searchQuery < this->data.at(currentElement)->dateTime->getDateTimeString()) {
+            if (searchQuery < this->data.at(currentElement)->dateTime->getDateString()) {
                 right = currentElement - 1;
                 currentElement = (left + right) / 2;
             }
-            else if (searchQuery > this->data.at(currentElement)->dateTime->getDateTimeString()) {
+            else if (searchQuery > this->data.at(currentElement)->dateTime->getDateString()) {
                 left = currentElement + 1;
                 currentElement = (left + right) / 2;
             }
@@ -133,7 +133,7 @@ int Database::binarySearch(const std::string &searchQuery) {
     if (sortStatus == SORT_PLATES && this->data.at(currentElement)->plateNumber == searchQuery) {
         return currentElement;
     }
-    else if (sortStatus == SORT_DATE && this->data.at(currentElement)->dateTime->getDateTimeString() == searchQuery) {
+    else if (sortStatus == SORT_DATE && this->data.at(currentElement)->dateTime->getDateString() == searchQuery) {
         return currentElement;
     }
     else {

@@ -104,4 +104,43 @@ void MergeSort::mergeWrapper(std::vector<std::unique_ptr<Citation>> &plates) {
         }
         insertIndex++;
     }
+}
+
+void MergeSort::mergeSortDates(vector<std::unique_ptr<Citation>> &citations) {
+    if (citations.size() <= 1) {
+        return;
+    }
+
+    std::vector<std::unique_ptr<Citation>> leftVector;
+    std::vector<std::unique_ptr<Citation>> rightVector;
+
+    for (int i = 0; i < citations.size() / 2; i++) {
+        leftVector.push_back(std::make_unique<Citation>(*citations.at(i)));
+    }
+    for (int i = (int) citations.size() / 2; i < citations.size(); i++) {
+        rightVector.push_back(std::make_unique<Citation>(*citations.at(i)));
+    }
+
+    mergeSortDates(leftVector);
+    mergeSortDates(rightVector);
+
+    auto leftIterator = leftVector.begin();
+    auto rightIterator = rightVector.begin();
+    int insertIndex = 0;
+    while (leftIterator != leftVector.end() || rightIterator != rightVector.end()) {
+        if (leftIterator == leftVector.end()) {
+            citations.at(insertIndex) = std::make_unique<Citation>(**rightIterator);
+            rightIterator++;
+        } else if (rightIterator == rightVector.end()) {
+            citations.at(insertIndex) = std::make_unique<Citation>(**leftIterator);
+            leftIterator++;
+        } else if ((*leftIterator)->dateTime->getDateTimeString() < (*rightIterator)->dateTime->getDateTimeString()) {
+            citations.at(insertIndex) = std::make_unique<Citation>(**leftIterator);
+            leftIterator++;
+        } else {
+            citations.at(insertIndex) = std::make_unique<Citation>(**rightIterator);
+            rightIterator++;
+        }
+        insertIndex++;
+    }
 };
