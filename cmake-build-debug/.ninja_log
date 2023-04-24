@@ -10,3 +10,7 @@
 8	679	7028681489940291	CMakeFiles/NoParking.dir/SortTest.cpp.obj	9613b457ec5fbf18
 1	117	7040660675199551	build.ninja	fabcad599295a7c7
 2	373	7039634468286770	CMakeFiles/NoParking.dir/PatienceSort.cpp.obj	277e218cc15aa28a
+10	469	7040663364349835	CMakeFiles/NoParking.dir/PatienceSortDate.cpp.obj	7e23dc8474177ca1
+6	470	7040663364349835	CMakeFiles/NoParking.dir/PatienceSort.cpp.obj	277e218cc15aa28a
+2	669	7040663366359812	CMakeFiles/NoParking.dir/main.cpp.obj	75c5c6849cc4f56c
+669	950	7040663369141868	NoParking.exe	356a30368230298

@@ -6,7 +6,7 @@
  * @param cardStacks
  * @param elementToHeapify
  */
-void PatienceSortCopy::heapifyDown(std::vector<std::list<std::unique_ptr<Citation>>> &cardStacks, std::size_t elementToHeapify) {
+void PatienceSort::heapifyDown(std::vector<std::list<std::unique_ptr<Citation>>> &cardStacks, std::size_t elementToHeapify) {
     for (std::size_t currentElement = elementToHeapify; currentElement < cardStacks.size();) {
         std::size_t leftChild = currentElement * 2 + 1;
         std::size_t rightChild = currentElement * 2 + 2;
@@ -37,7 +37,7 @@ void PatienceSortCopy::heapifyDown(std::vector<std::list<std::unique_ptr<Citatio
     }
 }
 
-void PatienceSortCopy::patienceSort(std::vector<std::unique_ptr<Citation>>& citations) {
+void PatienceSort::patienceSort(std::vector<std::unique_ptr<Citation>>& citations) {
     std::vector<std::list<std::unique_ptr<Citation>>> cardStacks;
 
     for (auto citationIter = citations.end(); citationIter != citations.begin();) {

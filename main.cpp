@@ -5,6 +5,7 @@
 #include "MergeSort.h"
 #include "BucketSort.h"
 #include "PatienceSort.h"
+#include "PatienceSortDate.h"
 using namespace std;
 
 int main() {
@@ -204,13 +205,24 @@ int main() {
                 }
             }
             else if (firstArgument.at(0) == 'p') {
-                cout << "Now patience sorting by license plate..." << endl;
-                auto startTime = chrono::system_clock::now();  // Get start time
-                PatienceSortCopy::patienceSort(database.data);
-                auto endTime = chrono::system_clock::now();  // Get end time
-                std::chrono::duration<double> elapsedTime = endTime - startTime;
-                cout << "Took " << elapsedTime.count() << " seconds to sort." <<  endl;
-                database.sortStatus = Database::SORT_PLATES;
+                if (!secondArgument.empty() && secondArgument.at(0) == 'd') {
+                    cout << "Now patience sorting by date..." << endl;
+                    auto startTime = chrono::system_clock::now();  // Get start time
+                    PatienceSortDate::patienceSort(database.data);
+                    auto endTime = chrono::system_clock::now();  // Get end time
+                    std::chrono::duration<double> elapsedTime = endTime - startTime;
+                    cout << "Took " << elapsedTime.count() << " seconds to sort." <<  endl;
+                    database.sortStatus = Database::SORT_DATE;
+                }
+                else {
+                    cout << "Now patience sorting by license plate..." << endl;
+                    auto startTime = chrono::system_clock::now();  // Get start time
+                    PatienceSort::patienceSort(database.data);
+                    auto endTime = chrono::system_clock::now();  // Get end time
+                    std::chrono::duration<double> elapsedTime = endTime - startTime;
+                    cout << "Took " << elapsedTime.count() << " seconds to sort." <<  endl;
+                    database.sortStatus = Database::SORT_PLATES;
+                }
             }
             else {
                 cout << "Please type m for merge sort or b for bucket sort." << endl;
