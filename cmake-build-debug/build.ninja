@@ -91,6 +91,12 @@ build CMakeFiles/NoParking.dir/PatienceSort.cpp.obj: CXX_COMPILER__NoParking_Deb
   OBJECT_DIR = CMakeFiles\NoParking.dir
   OBJECT_FILE_DIR = CMakeFiles\NoParking.dir
 
+build CMakeFiles/NoParking.dir/PatienceSortDate.cpp.obj: CXX_COMPILER__NoParking_Debug C$:/Users/UFSpring2023/CLionProjects/NoParking/PatienceSortDate.cpp || cmake_object_order_depends_target_NoParking
+  DEP_FILE = CMakeFiles\NoParking.dir\PatienceSortDate.cpp.obj.d
+  FLAGS = -g -fdiagnostics-color=always
+  OBJECT_DIR = CMakeFiles\NoParking.dir
+  OBJECT_FILE_DIR = CMakeFiles\NoParking.dir
+
 
 # =============================================================================
 # Link build statements for EXECUTABLE target NoParking
@@ -99,7 +105,7 @@ build CMakeFiles/NoParking.dir/PatienceSort.cpp.obj: CXX_COMPILER__NoParking_Deb
 #############################################
 # Link the executable NoParking.exe
 
-build NoParking.exe: CXX_EXECUTABLE_LINKER__NoParking_Debug CMakeFiles/NoParking.dir/main.cpp.obj CMakeFiles/NoParking.dir/MergeSort.cpp.obj CMakeFiles/NoParking.dir/BucketSort.cpp.obj CMakeFiles/NoParking.dir/Database.cpp.obj CMakeFiles/NoParking.dir/Citation.cpp.obj CMakeFiles/NoParking.dir/DateTime.cpp.obj CMakeFiles/NoParking.dir/PatienceSort.cpp.obj
+build NoParking.exe: CXX_EXECUTABLE_LINKER__NoParking_Debug CMakeFiles/NoParking.dir/main.cpp.obj CMakeFiles/NoParking.dir/MergeSort.cpp.obj CMakeFiles/NoParking.dir/BucketSort.cpp.obj CMakeFiles/NoParking.dir/Database.cpp.obj CMakeFiles/NoParking.dir/Citation.cpp.obj CMakeFiles/NoParking.dir/DateTime.cpp.obj CMakeFiles/NoParking.dir/PatienceSort.cpp.obj CMakeFiles/NoParking.dir/PatienceSortDate.cpp.obj
   FLAGS = -g
   LINK_LIBRARIES = -lkernel32 -luser32 -lgdi32 -lwinspool -lshell32 -lole32 -loleaut32 -luuid -lcomdlg32 -ladvapi32
   OBJECT_DIR = CMakeFiles\NoParking.dir

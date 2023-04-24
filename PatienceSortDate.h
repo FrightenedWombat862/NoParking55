@@ -7,7 +7,7 @@
 #include <vector>
 #include "Citation.h"
 
-class PatienceSortCopy {
+class PatienceSortDate {
 protected:
     static void heapifyDown(std::vector<std::list<std::unique_ptr<Citation>>> &cardStacks, std::size_t elementToHeapify);
 public:

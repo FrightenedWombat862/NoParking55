@@ -1,4 +1,4 @@
-#include "PatienceSort.h"
+#include "PatienceSortDate.h"
 
 /**
  * Heapify down algorithm for a min heap (cardStacks). Uses the license plate number of the top element
@@ -6,14 +6,14 @@
  * @param cardStacks
  * @param elementToHeapify
  */
-void PatienceSortCopy::heapifyDown(std::vector<std::list<std::unique_ptr<Citation>>> &cardStacks, std::size_t elementToHeapify) {
+void PatienceSortDate::heapifyDown(std::vector<std::list<std::unique_ptr<Citation>>> &cardStacks, std::size_t elementToHeapify) {
     for (std::size_t currentElement = elementToHeapify; currentElement < cardStacks.size();) {
         std::size_t leftChild = currentElement * 2 + 1;
         std::size_t rightChild = currentElement * 2 + 2;
-        if (leftChild < cardStacks.size() && cardStacks.at(currentElement).front()->plateNumber > cardStacks.at(leftChild).front()->plateNumber) {
+        if (leftChild < cardStacks.size() && cardStacks.at(currentElement).front()->dateTime->getDateTimeString() > cardStacks.at(leftChild).front()->dateTime->getDateTimeString()) {
             // Left child is less than current element.
             if (rightChild >= cardStacks.size() ||
-                cardStacks.at(leftChild).front()->plateNumber < cardStacks.at(rightChild).front()->plateNumber) {
+                cardStacks.at(leftChild).front()->dateTime->getDateTimeString() < cardStacks.at(rightChild).front()->dateTime->getDateTimeString()) {
                 // Left child is less than rightChild. Prioritize that one.
                 std::swap(cardStacks.at(leftChild), cardStacks.at(currentElement));
                 currentElement = leftChild;  // Heapify again for the left child.
@@ -25,7 +25,7 @@ void PatienceSortCopy::heapifyDown(std::vector<std::list<std::unique_ptr<Citatio
             }
         }
         else if (rightChild < cardStacks.size() &&
-                cardStacks.at(currentElement).front()->plateNumber > cardStacks.at(rightChild).front()->plateNumber) {
+                cardStacks.at(currentElement).front()->dateTime->getDateTimeString() > cardStacks.at(rightChild).front()->dateTime->getDateTimeString()) {
             // Right child is less than current element.
             std::swap(cardStacks.at(rightChild), cardStacks.at(currentElement));
             currentElement = rightChild;  // Heapify again for the right child.
@@ -37,7 +37,7 @@ void PatienceSortCopy::heapifyDown(std::vector<std::list<std::unique_ptr<Citatio
     }
 }
 
-void PatienceSortCopy::patienceSort(std::vector<std::unique_ptr<Citation>>& citations) {
+void PatienceSortDate::patienceSort(std::vector<std::unique_ptr<Citation>>& citations) {
     std::vector<std::list<std::unique_ptr<Citation>>> cardStacks;
 
     for (auto citationIter = citations.end(); citationIter != citations.begin();) {
@@ -50,7 +50,7 @@ void PatienceSortCopy::patienceSort(std::vector<std::unique_ptr<Citation>>& cita
 
         std::size_t stackToInsertIn = (std::size_t) -1;  // "-1" means not found
         while (rangeRight != (std::size_t) -1 && rangeLeft <= rangeRight) {
-            if (citationPtr->plateNumber <= cardStacks.at(currentStack).front()->plateNumber) {
+            if (citationPtr->dateTime->getDateTimeString() <= cardStacks.at(currentStack).front()->dateTime->getDateTimeString()) {
                 // This stack is valid, but we want to look left for another valid stack.
                 stackToInsertIn = currentStack;
                 if (currentStack == 0) {
@@ -62,7 +62,7 @@ void PatienceSortCopy::patienceSort(std::vector<std::unique_ptr<Citation>>& cita
                     currentStack = (rangeLeft + rangeRight) / 2;
                 }
             }
-            else if (citationPtr->plateNumber > cardStacks.at(currentStack).front()->plateNumber) {
+            else if (citationPtr->dateTime->getDateTimeString() > cardStacks.at(currentStack).front()->dateTime->getDateTimeString()) {
                 // This stack is not valid. Look right for another stack.
                 if (currentStack == cardStacks.size() - 1) {
                     // We're at the end of the array and can't go right anymore.
@@ -96,7 +96,7 @@ void PatienceSortCopy::patienceSort(std::vector<std::unique_ptr<Citation>>& cita
         /*
         bool placedInStack = false;  // Whether the card has been put into a stack
         for (std::list<std::unique_ptr<Citation>>& cardStack : cardStacks) {
-            if (citationPtr->plateNumber <= cardStack.front()->plateNumber) {
+            if (citationPtr->dateTime->getDateTimeString() <= cardStack.front()->dateTime->getDateTimeString()) {
                 // We found a suitable stack. Place the Citation on top of the stack
                 cardStack.push_front(std::make_unique<Citation>(*citationPtr));
                 placedInStack = true;

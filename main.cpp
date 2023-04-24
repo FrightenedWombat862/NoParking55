@@ -206,7 +206,7 @@ int main() {
             else if (firstArgument.at(0) == 'p') {
                 cout << "Now patience sorting by license plate..." << endl;
                 auto startTime = chrono::system_clock::now();  // Get start time
-                PatienceSort::patienceSort(database.data);
+                PatienceSortCopy::patienceSort(database.data);
                 auto endTime = chrono::system_clock::now();  // Get end time
                 std::chrono::duration<double> elapsedTime = endTime - startTime;
                 cout << "Took " << elapsedTime.count() << " seconds to sort." <<  endl;
