@@ -53,7 +53,7 @@ void Database::readFromCsv(const std::string &filename) {
         }
 
         // Initialize fine and dateTime.
-        unsigned int fine = std::stoi(inputLineVector.at(7));
+        int fine = std::stoi(inputLineVector.at(7));
         DateTime dateTime((unsigned int) std::stoi(inputLineVector.at(8)),
                           (unsigned short) std::stoi(inputLineVector.at(9)),
                           (unsigned short) std::stoi(inputLineVector.at(10)),

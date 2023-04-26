@@ -14,12 +14,12 @@ public:
     std::string carColor;
     std::string location;
     std::string violation;
-    unsigned int fine;
+    int fine;
     DateTime* dateTime;
 
     // Constructor and other useful memory management.
     Citation(std::string &plateNumber, std::string &state, std::string &carMake, std::string &carStyle, std::string &carColor,
-             std::string &location, std::string &violation, unsigned int &fine, DateTime &dateTime);
+             std::string &location, std::string &violation, int &fine, DateTime &dateTime);
     Citation(const Citation &other);
     Citation& operator=(const Citation& other);
     ~Citation();

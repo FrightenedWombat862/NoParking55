@@ -121,6 +121,10 @@ int main() {
                     cout << "Expected <index> in get command to be positive, got " << firstArgument << endl;
                     continue;
                 }
+                else if (indexToGet >= database.data.size()) {
+                    cout << "Cannot get index " << firstArgument << " in array of size " << database.data.size() << endl;
+                    continue;
+                }
             }
             catch (std::invalid_argument &e) {
                 cout << "get command requires an integer as the first argument, not \"" << firstArgument << '\"' << endl;
@@ -225,7 +229,7 @@ int main() {
                 }
             }
             else {
-                cout << "Please type m for merge sort or b for bucket sort." << endl;
+                cout << "Please type m for merge sort, b for bucket sort, or p for patience sort." << endl;
             }
         }
         else {

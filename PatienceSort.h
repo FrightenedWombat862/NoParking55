@@ -3,7 +3,6 @@
 
 #include <list>
 #include <memory>
-#include <queue>
 #include <vector>
 #include "Citation.h"
 

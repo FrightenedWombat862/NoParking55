@@ -17,7 +17,7 @@ void Citation::copyResources(const Citation &other) {
 }
 
 Citation::Citation(std::string &plateNumber, std::string &state, std::string &carMake, std::string &carStyle,
-                   std::string &carColor, std::string &location, std::string &violation, unsigned int &fine,
+                   std::string &carColor, std::string &location, std::string &violation, int &fine,
                    DateTime &dateTime) {
     this->plateNumber = plateNumber;
     this->state = state;

@@ -107,6 +107,7 @@ build CMakeFiles/NoParking.dir/PatienceSortDate.cpp.obj: CXX_COMPILER__NoParking
 
 build NoParking.exe: CXX_EXECUTABLE_LINKER__NoParking_Debug CMakeFiles/NoParking.dir/main.cpp.obj CMakeFiles/NoParking.dir/MergeSort.cpp.obj CMakeFiles/NoParking.dir/BucketSort.cpp.obj CMakeFiles/NoParking.dir/Database.cpp.obj CMakeFiles/NoParking.dir/Citation.cpp.obj CMakeFiles/NoParking.dir/DateTime.cpp.obj CMakeFiles/NoParking.dir/PatienceSort.cpp.obj CMakeFiles/NoParking.dir/PatienceSortDate.cpp.obj
   FLAGS = -g
+  LINK_FLAGS = -static
   LINK_LIBRARIES = -lkernel32 -luser32 -lgdi32 -lwinspool -lshell32 -lole32 -loleaut32 -luuid -lcomdlg32 -ladvapi32
   OBJECT_DIR = CMakeFiles\NoParking.dir
   POST_BUILD = cd .
